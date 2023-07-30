@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import SecureRoute from "@/components/secureRouter";
 
 export default function AddTopic() {
   const [title, setTitle] = useState("");
@@ -37,7 +38,8 @@ export default function AddTopic() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+    <SecureRoute>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <input
         onChange={(e) => setTitle(e.target.value)}
         value={title}
@@ -61,5 +63,7 @@ export default function AddTopic() {
         Add Topic
       </button>
     </form>
+    </SecureRoute>
+    
   );
 }

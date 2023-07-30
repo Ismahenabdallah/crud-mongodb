@@ -1,32 +1,76 @@
+"use client"
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import jwt from "jsonwebtoken";
+import { useRouter } from "next/navigation";
+
 
 export default function Navbar() {
+  // Step 1: Check if a token exists in the localStorage
+  const token = localStorage.getItem("token");
+  const isLoggedIn = !!token;
+  const router = useRouter
+  // Step 2: Create a state variable to hold the user's username
+  const [username, setUsername] = useState("");
+
+  // Step 3: Set the username when the component mounts
+  useEffect(() => {
+    // Step 4: Decode the token and extract the username
+    if (token) {
+      try {
+        const decodedToken = jwt.decode(token);
+        // Assuming the token contains a field "username" with the username
+        if (decodedToken && decodedToken.userId.username) {
+          setUsername(decodedToken.userId.username);
+        }
+      } catch (error) {
+        // Handle any decoding errors here (e.g., invalid token)
+        console.error("Error decoding token:", error);
+      }
+    }
+  }, [token]);
+  const handleLogout = () => {
+    localStorage.clear();
+    router.push('/login');
+  };
   return (
+    <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
 
-    <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
-      <Link href={"/"}>  <div class="flex items-center flex-shrink-0 text-white mr-6">
-
-        <svg class="fill-current h-8 w-8 mr-2" width="54" height="54" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg"><path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" /></svg>
-
-        <span class="font-semibold text-xl tracking-tight">Crud </span>
-
-      </div>
-      </Link>
-
-
+      {isLoggedIn && (
+        <Link href={"/add"}>
+          <div className="flex items-center flex-shrink-0 text-white mr-6">
+            <span className="font-semibold text-xl tracking-tight">Add Topic</span>
+          </div>
+        </Link>
+      )}
 
       <div>
-        <Link href="/addtodo" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Add Todo</Link>
-
+        {/* Step 5: Conditionally render the elements */}
+        {isLoggedIn ? (
+          <>
+            <span className="text-white mr-4">Hello, {username}</span>
+            <button onClick={handleLogout} >
+              <div className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
+                Logout
+              </div>
+            </button>
+          </>
+        ) : (
+          <div className="space-x-2">
+            <Link href="/login">
+              <div className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
+                Login
+              </div>
+            </Link>
+            <Link href="/register">
+              <div className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">
+                Register
+              </div>
+            </Link>
+          </div>
+        )}
       </div>
     </nav>
-    // <nav className="flex justify-between items-center bg-slate-800 px-8 py-3">
-    //   <Link className="text-white font-bold" href={"/"}>
-    //     GTCoding.
-    //   </Link>
-    //   <Link className="bg-white p-2" href={"/addTopic"}>
-    //     Add Topic
-    //   </Link>
-    // </nav>
   );
 }
+
