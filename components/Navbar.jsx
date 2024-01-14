@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import jwt from "jsonwebtoken";
@@ -7,8 +7,17 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   // Step 1: Check if a token exists in the localStorage
+  const [isLoggedIn, setisLoggedIn] = useState(false);
   const token = localStorage.getItem("token");
-  const isLoggedIn = !!token;
+  useEffect(() => {
+    if (token) {
+      setisLoggedIn(true);
+    }
+  }, [token]);
+
+  console.log(isLoggedIn)
+
+
   const router = useRouter
   // Step 2: Create a state variable to hold the user's username
   const [username, setUsername] = useState("");
@@ -31,12 +40,14 @@ export default function Navbar() {
   }, [token]);
   const handleLogout = () => {
     localStorage.clear();
-    router.push('/login');
+    //router.push('/login');
+    window.location.href = '/login';
+
   };
   return (
     <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6">
 
-      {isLoggedIn && (
+      {isLoggedIn === true && (
         <Link href={"/add"}>
           <div className="flex items-center flex-shrink-0 text-white mr-6">
             <span className="font-semibold text-xl tracking-tight">Add Topic</span>
@@ -46,7 +57,7 @@ export default function Navbar() {
 
       <div>
         {/* Step 5: Conditionally render the elements */}
-        {isLoggedIn ? (
+        {isLoggedIn === true ? (
           <>
             <span className="text-white mr-4">Hello, {username}</span>
             <button onClick={handleLogout} >

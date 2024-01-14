@@ -28,7 +28,9 @@ export default function AddTopic() {
       });
 
       if (res.ok) {
-        router.push("/");
+        window.location.href = '/'
+
+
       } else {
         throw new Error("Failed to create a topic");
       }
@@ -40,30 +42,30 @@ export default function AddTopic() {
   return (
     <SecureRoute>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <input
-        onChange={(e) => setTitle(e.target.value)}
-        value={title}
-        className="border border-slate-500 px-8 py-2"
-        type="text"
-        placeholder="Topic Title"
-      />
+        <input
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
+          className="border border-slate-500 px-8 py-2"
+          type="text"
+          placeholder="Topic Title"
+        />
 
-      <input
-        onChange={(e) => setDescription(e.target.value)}
-        value={description}
-        className="border border-slate-500 px-8 py-2"
-        type="text"
-        placeholder="Topic Description"
-      />
+        <input
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
+          className="border border-slate-500 px-8 py-2"
+          type="text"
+          placeholder="Topic Description"
+        />
 
-      <button
-        type="submit"
-        className="bg-teal-500 font-bold text-white py-3 px-6 w-fit"
-      >
-        Add Topic
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="bg-teal-500 font-bold text-white py-3 px-6 w-fit"
+        >
+          Add Topic
+        </button>
+      </form>
     </SecureRoute>
-    
+
   );
 }

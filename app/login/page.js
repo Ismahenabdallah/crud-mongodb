@@ -36,9 +36,11 @@ const Login = () => {
                 const token = data.token; // Assuming the API response contains the token.
 
                 // Store the token in the local storage
-                localStorage.setItem("token", token);
-                router.push("/");
+                await localStorage.setItem("token", token);
 
+                // window.location.reload();
+                location.href = '/';
+                ///router.push("/");
                 console.log(data)
             } else {
                 throw new Error("Échec ");
